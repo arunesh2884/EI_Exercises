@@ -76,6 +76,6 @@
                 -notify all devices to turn off.
                 -mark a not booked.
 
-### Defficulty:
-        -maintaining centralised time and syncronize it.
+### Difficulty:
+    -maintaining centralised time and syncronize it.
         
