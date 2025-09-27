@@ -1,5 +1,12 @@
 package Cli;
-public class BlockRoomCommand implements Command {
+import Models.Office;
+
+public class BlockRoomCommand extends Command {
+
+    public BlockRoomCommand(Office office) {
+        super(office);
+    }
+
     @Override
     public void execute(String args[]) {
         System.out.println("Blocking room...");

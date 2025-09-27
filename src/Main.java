@@ -1,6 +1,8 @@
 import java.util.*;
 
 import Cli.Menu;
+import Exceptions.BookingException;
+import Models.Office;
 import Utils.TimeUtils;
 
 public class Main{
@@ -8,14 +10,28 @@ public class Main{
 
         // Display system title
         Cli.Decorator.SystemTitle();
-        
-        Menu menu = new Menu(
+        Office office = new Office();
+
+        System.out.println(TimeUtils.getCurrentTimeHHMM());
+        Menu menu = new Menu(office,
             new HashMap<String, Cli.Command>() {{
-                put("add", new Cli.AddOccupantCommand());
-                put("block", new Cli.BlockRoomCommand());
-                put("config", new Cli.ConfigCommand());
+                put("add", new Cli.AddOccupantCommand(office));
+                put("block", new Cli.BlockRoomCommand(office));
+                put("config", new Cli.ConfigCommand(office));
             }}
         );
-        menu.show();
+        try {
+            menu.show();
+
+        } catch (NumberFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }catch (BookingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

@@ -1,8 +1,16 @@
 package Cli;
+import Exceptions.BookingException;
+import Models.Office;
 
-public interface Command {
-    void execute(String[] args);
+public abstract class Command {
+    protected Office office;
+    
+    Command(Office office) {
+        this.office = office;
+    }
 
-    void printSyntax() ;
+    
+    abstract void execute(String[] args) throws NumberFormatException, BookingException;
+    abstract void printSyntax();
     
 }

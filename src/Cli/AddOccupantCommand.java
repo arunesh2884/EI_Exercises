@@ -1,6 +1,12 @@
 package Cli;
+import Models.Office;
 
-public class AddOccupantCommand implements Command {
+public class AddOccupantCommand extends Command {
+
+    public AddOccupantCommand(Office office) {
+        super(office);
+    }
+
 
     @Override
     public void execute(String[] args) {

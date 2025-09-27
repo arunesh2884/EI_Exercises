@@ -1,13 +1,37 @@
 package Cli;
 
-public class ConfigCommand implements Command {
+
+import Exceptions.BookingException;
+import Models.Office;
+
+public class ConfigCommand extends Command {
+
+    public ConfigCommand(Office office) {
+        super(office);
+    }
 
 
     @Override
-    public void execute(String args[]) {
+    public void execute(String args[]) throws NumberFormatException, BookingException {
         System.out.println("Configuring settings...");
-        // business logic here
+
+        if("room".equalsIgnoreCase(args[1])){
+            if(args.length == 4 && "count".equalsIgnoreCase(args[2])){
+                office.configureOffice(Integer.parseInt(args[3]));
+                return;
+            }else if(args.length == 6 && "max".equalsIgnoreCase(args[2]) && "capacity".equalsIgnoreCase(args[3])){
+                office.configureRoom(Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+                return;
+            }else{
+                throw new BookingException("Invalid Command");
+            }
+        }else{
+            throw new BookingException("Invalid Command");
+        }
     }
+
+
+
     @Override
     public void printSyntax() {
         System.out.println("Config:");
