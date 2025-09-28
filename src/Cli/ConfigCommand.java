@@ -4,12 +4,12 @@ package Cli;
 import Exceptions.BookingException;
 import Models.Office;
 
-public class ConfigCommand extends Command {
+public class ConfigCommand implements Command {
+    Office office;
 
-    public ConfigCommand(Office office) {
-        super(office);
+    public ConfigCommand() {
+        this.office = Office.getInstance();
     }
-
 
     @Override
     public void execute(String args[]) throws NumberFormatException, BookingException {

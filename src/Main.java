@@ -10,14 +10,14 @@ public class Main{
 
         // Display system title
         Cli.Decorator.SystemTitle();
-        Office office = new Office();
+        // Office office = new Office();
 
         System.out.println(TimeUtils.getCurrentTimeHHMM());
-        Menu menu = new Menu(office,
+        Menu menu = new Menu(
             new HashMap<String, Cli.Command>() {{
-                put("add", new Cli.AddOccupantCommand(office));
-                put("block", new Cli.BlockRoomCommand(office));
-                put("config", new Cli.ConfigCommand(office));
+                put("add", new Cli.AddOccupantCommand());
+                put("block", new Cli.BlockRoomCommand());
+                put("config", new Cli.ConfigCommand());
             }}
         );
         try {

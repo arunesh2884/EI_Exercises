@@ -31,12 +31,12 @@ public class RoomManager {
     }
 
     // Book a room
-    public void bookRoom(int roomId, int invitees, String startTime, int durationMinutes) throws BookingException {
+    public void blockRoom(int roomId, String startTime, int durationMinutes) throws BookingException {
         Room room = rooms.get(roomId);
         if (room == null) {
             throw new BookingException("Room " + roomId + " does not exist!");
         }
-        room.bookRoom(invitees, startTime, durationMinutes);
+        room.blockRoom( startTime, durationMinutes);
     }
 
     // Get room info
@@ -48,6 +48,15 @@ public class RoomManager {
         return room;
     }
 
+    public void addOccupant(int roomId, int numberOfOccupants) {
+        Room room = rooms.get(roomId);
+        if (room == null) {
+            throw new UnsupportedOperationException("Room " + roomId + " does not exist!");
+        }
+        room.addOccupants(numberOfOccupants);
+    }
+
+
     // Display all rooms
     public void listRooms() {
         if (rooms.isEmpty()) {
@@ -58,4 +67,6 @@ public class RoomManager {
             System.out.println(room);
         }
     }
+
+   
 }

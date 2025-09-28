@@ -20,10 +20,10 @@ public class Booking {
 
         // Parse times into LocalTime
         LocalTime thisStart = LocalTime.parse(this.startTime, formatter);
-        LocalTime thisEnd = thisStart.plusHours(duration);
+        LocalTime thisEnd = thisStart.plusMinutes(duration);
 
         LocalTime otherStart = LocalTime.parse(other.startTime, formatter);
-        LocalTime otherEnd = otherStart.plusHours(other.duration);
+        LocalTime otherEnd = otherStart.plusMinutes(other.duration);
 
         // Overlap check using TimeUtils.compareTimes
         boolean endsBefore = TimeUtils.compareTimes(thisEnd.format(formatter), otherStart.format(formatter)) <= 0;

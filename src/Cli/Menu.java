@@ -2,14 +2,13 @@ package Cli;
 import java.util.*;
 
 import Exceptions.BookingException;
-import Models.Office;
+// import Models.Office;
 
 public class Menu {
-    private Office office;
+    // private Office office;
     private Map<String, Command> commands;
 
-    public Menu(Office office, Map<String, Command> commands) {
-        this.office = office;
+    public Menu( Map<String, Command> commands) {
         this.commands = commands;
     }
 
