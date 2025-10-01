@@ -5,6 +5,8 @@ import Models.Room;
 import Utils.TimeUtils;
 // import Models.Booking;
 import Exceptions.BookingException;
+import Exceptions.ConfigException;
+import Exceptions.OccupyingException;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -32,16 +34,17 @@ public class RoomManager {
 
                 // Activate booking at start time
                 if (now.equals(booking.getStartTime())) {
+
                     room.setBooked(true);
+                    System.out.println("\nRoom " + room.getRoomNumber() + " booking started at " + now );
+                    System.out.println("will be released in 5 minutes if no occupancy detected.\n");
                     // Schedule 2-min post start occupancy check
                     scheduler.schedule(() -> checkAndRelease(room, booking), 2, TimeUnit.MINUTES);
                 }
 
                 // After booking end time, remove booking
                 if (TimeUtils.compareTimes(now, booking.getEndTime()) >= 0 && room.isBooked()) {
-                    room.setBooked(false);
                     room.releaseBooking(booking);
-                    // turn off devices, etc.
                 }
             }
         }
@@ -66,23 +69,36 @@ public class RoomManager {
         System.out.println("Room " + roomId + " added.");
     }
 
+
+
     // Configure a room with capacity
-    public void configureRoom(int roomId, int capacity) throws BookingException {
-        Room room = rooms.get(roomId);
-        if (room == null) {
-            throw new BookingException("Room " + roomId + " does not exist!");
+    public void configureRoom(int roomId, int capacity)  {
+        try {
+                Room room = rooms.get(roomId);
+            if (room == null) {
+                throw new ConfigException("Room " + roomId + " does not exist!");
+            }
+            room.configure(capacity);
+            System.out.println("Room " + roomId + " configured with capacity " + capacity);
+
+        } catch (ConfigException e) {
+            System.out.println("Configuration error: " + e.getMessage());
         }
-        room.configure(capacity);
-        System.out.println("Room " + roomId + " configured with capacity " + capacity);
+       
     }
 
     // Book a room
-    public void blockRoom(int roomId, String startTime, int durationMinutes) throws BookingException {
-        Room room = rooms.get(roomId);
-        if (room == null) {
-            throw new BookingException("Room " + roomId + " does not exist!");
+    public void blockRoom(int roomId, String startTime, int durationMinutes)  {
+        
+        try {
+            Room room = rooms.get(roomId);
+            if (room == null) {
+                throw new BookingException("Room " + roomId + " does not exist!");
+            }
+            room.blockRoom( startTime, durationMinutes);
+        } catch (BookingException e) {
+            System.out.println("Booking error: " + e.getMessage());
         }
-        room.blockRoom( startTime, durationMinutes);
     }
 
     // Get room info
@@ -95,20 +111,25 @@ public class RoomManager {
     }
 
     public void addOccupant(int roomId, int numberOfOccupants) {
-        Room room = rooms.get(roomId);
-        if (room == null) {
-            throw new UnsupportedOperationException("Room " + roomId + " does not exist!");
+        try {
+            Room room = rooms.get(roomId);
+            if (room == null) {
+                throw new OccupyingException("Room " + roomId + " does not exist!");
+            }
+            if(room.isConfigured() == false){
+                throw new OccupyingException("Room " + roomId + " is not configured yet!");
+            }
+            if (!room.isBooked()) {
+                throw new OccupyingException("Room " + roomId + " is currently not booked!");
+            }
+            if(0 > numberOfOccupants){
+                throw new OccupyingException("Number of occupants must be positive.");
+            }  
+        
+                room.addOccupants(numberOfOccupants);
+        } catch (OccupyingException e) {
+            System.out.println("Error adding occupants to room " + roomId + ": " + e.getMessage());
         }
-        if(room.isConfigured() == false){
-            throw new UnsupportedOperationException("Room " + roomId + " is not configured yet!");
-        }
-        if (!room.isBooked()) {
-            throw new UnsupportedOperationException("Room " + roomId + " is currently not booked!");
-        }
-        if(0 > numberOfOccupants){
-            throw new UnsupportedOperationException("Number of occupants must be positive.");
-        }  
-        room.addOccupants(numberOfOccupants);
     }
 
 

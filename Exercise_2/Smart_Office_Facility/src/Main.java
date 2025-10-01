@@ -10,9 +10,8 @@ public class Main{
 
         // Display system title
         Cli.Decorator.SystemTitle();
-        // Office office = new Office();
-
-        System.out.println(TimeUtils.getCurrentTimeHHMM());
+        // Display current time
+        System.out.println("Current time: " + TimeUtils.getCurrentTimeHHMM());
         Menu menu = new Menu(
             new HashMap<String, Cli.Command>() {{
                 put("add", new Cli.AddOccupantCommand());
@@ -23,15 +22,12 @@ public class Main{
         try {
             menu.show();
 
-        } catch (NumberFormatException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }catch (BookingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (BookingException e) {
+            System.out.println("Booking error: " + e.getMessage());
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println("Invalid Command");
+        }catch (Exception e) {
+            System.out.println("An unexpected error occurred: " + e.getMessage());
         }
     }
 }

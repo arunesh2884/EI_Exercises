@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Exercise_1.Behavioural.Observer.Main",
+            "projectName": "EI_Exercises_312db32f"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Exercise_1.Structural.Bridge.Main",
+            "projectName": "EI_Exercises_312db32f"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Exercise_1.Behavioural.StrategyPattern.Main",
+            "projectName": "EI_Exercises_312db32f"
+        },
+        {
+            "type": "java",
+            "name": "Main(1)",
+            "request": "launch",
+            "mainClass": "Exercise_1.CreationalPattern.Factory.Main",
+            "projectName": "EI_Exercises_312db32f"
+        },
+        {
+            "type": "java",
+            "name": "Main(2)",
+            "request": "launch",
+            "mainClass": "Exercise_1.CreationalPattern.Singleton.Main",
+            "projectName": "EI_Exercises_312db32f"
+        },
+        {
+            "type": "java",
+            "name": "Main(3)",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "EI_Exercises_312db32f"
+        }
+    ]
+}

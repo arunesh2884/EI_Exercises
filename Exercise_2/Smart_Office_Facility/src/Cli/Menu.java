@@ -3,6 +3,7 @@ import java.util.*;
 
 import Exceptions.BookingException;
 // import Models.Office;
+import Exceptions.ConfigException;
 
 public class Menu {
     // private Office office;
@@ -20,7 +21,7 @@ public class Menu {
         }
     }
 
-    public void show() throws NumberFormatException, BookingException {
+    public void show() throws NumberFormatException, BookingException, ArrayIndexOutOfBoundsException {
         // ... show options
         showOptions();
 
@@ -35,18 +36,24 @@ public class Menu {
             return;
              // End recursion
         }
-
-        Command command = commands.get(input[0].toLowerCase());
-        if (command != null) {
-            command.execute(input);
-        } else {
-            System.out.println("Invalid command.");
+        try {
+            Command command = commands.get(input[0].toLowerCase());
+            if (command != null) {
+                command.execute(input);
+            } else {
+                System.out.println("Invalid command.");
+            }
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid Command");
+            show(); // Recursive call—shows menu again unless exit chosen
+        } catch (BookingException e) {
+            System.out.println("Booking error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("An unexpected error occurred: " + e.getMessage());
+        } finally {
+            //separator
+            Decorator.separator();
+            show(); // Recursive call—shows menu again unless exit chosen
         }
-
-        //separator
-        Decorator.separator();
-        
-
-        show(); // Recursive call—shows menu again unless exit chosen
     }
 }

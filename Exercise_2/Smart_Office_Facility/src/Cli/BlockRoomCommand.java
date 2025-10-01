@@ -13,7 +13,7 @@ public class BlockRoomCommand implements Command {
 
     @Override
     public void execute(String args[]) {
-        System.out.println("Blocking room...");
+        System.out.println("====== Blocking room ======");
         if(args.length != 5){
             System.out.println("Invalid Command");
             printSyntax();
@@ -36,7 +36,7 @@ public class BlockRoomCommand implements Command {
     @Override
     public void printSyntax() {
         System.out.println("Block:");
-        System.out.println("    ->Block Room <id> <StartTime> <Duration>");
+        System.out.println("    -> Block Room <id> <StartTime> <Duration>");
     }
 
 }

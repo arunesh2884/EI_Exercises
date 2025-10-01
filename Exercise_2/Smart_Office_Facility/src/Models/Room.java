@@ -2,6 +2,8 @@ package Models;
 
 import java.util.*;
 import Exceptions.BookingException;
+import Exceptions.ConfigException;
+import Exceptions.OccupyingException;
 import Services.DeviceManager;
 import Utils.TimeUtils;
 
@@ -23,7 +25,10 @@ public class Room {
         this.deviceManager.addDevice(new AirConditioner());
     }
 
-    public void configure(int capacity) {
+    public void configure(int capacity) throws ConfigException {
+        if (capacity <= 0) {
+            throw new ConfigException("Capacity must be a positive integer.");
+        }
         this.capacity = capacity;
         this.state = RoomState.CONFIGURED;
     }
@@ -47,8 +52,8 @@ public class Room {
 
         bookings.add(newBooking);
         //remains configured state till the booking's startTime and wants to start the 5min countdown at startTime - 5min
-    
-        System.out.println("Room " + roomId + " booked successfully.");
+
+        System.out.println("Room " + roomId + " booked from " + startTime + " for " + duration + " minutes successfully.");
     }
 
 
@@ -61,24 +66,24 @@ public class Room {
             }
         }
         bookings.remove(bookings.remove(booking));
-        System.out.println("Room " + roomId + " is now released.");
+        System.out.println("Room " + roomId + " is now released."+" Current occupancy: " + currentOccupancy);
     }
 
 
-    public void addOccupants(int numberOfOccupants) {
-        if (state == RoomState.UNCONFIGURED) {
-            throw new UnsupportedOperationException("Room " + roomId + " is not configured yet!");
+    public void addOccupants(int numberOfOccupants) throws OccupyingException {
+        if (this.isConfigured() == false) {
+            throw new OccupyingException("Room " + roomId + " is not configured yet!");
         }
 
         if(numberOfOccupants <0){
-            throw new UnsupportedOperationException("Number of occupants must be positive.");
+            throw new OccupyingException("Number of occupants must be positive.");
         }
 
         if (numberOfOccupants == 0){
             currentOccupancy = 0;
             System.out.println("All occupants have left room " + roomId);
         }else if (numberOfOccupants + getCurrentOccupancy() > capacity){
-            throw new UnsupportedOperationException("Adding " + numberOfOccupants + " exceeds room capacity of " + capacity);
+            throw new OccupyingException("Adding " + numberOfOccupants + " exceeds room capacity of " + capacity);
         }
         currentOccupancy += numberOfOccupants;
         System.out.println(numberOfOccupants+" occupants added to room "+roomId+". Current occupancy:"+ currentOccupancy);
@@ -101,6 +106,15 @@ public class Room {
         }
     }
 
+
+
+
+
+
+    // Getters and Setters
+    public int getCapacity() {
+        return capacity;
+    }
     public SortedSet<Booking> getBookings() { return bookings; }
 
     public boolean isOccupied() {
@@ -108,7 +122,7 @@ public class Room {
     }
 
     public boolean isBooked() {
-        return state == RoomState.BOOKED;
+        return !(state != RoomState.BOOKED);
     }
 
     public int getRoomNumber() {
@@ -116,9 +130,21 @@ public class Room {
     }
 
     public boolean isConfigured() {
-        return state == RoomState.CONFIGURED;
+        return state != RoomState.UNCONFIGURED;
     }
 
+
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomId=" + roomId +
+                ", capacity=" + capacity +
+                ", currentOccupancy=" + currentOccupancy +
+                ", state=" + state +
+                ", bookings=" + bookings +
+                '}';
+    }
 
 
     

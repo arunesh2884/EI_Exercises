@@ -1,5 +1,6 @@
 package Cli;
 import Exceptions.BookingException;
+import Exceptions.OccupyingException;
 import Models.Office;
 
 public class AddOccupantCommand implements Command {
@@ -10,7 +11,7 @@ public class AddOccupantCommand implements Command {
 
 
     @Override
-    public void execute(String[] args) {
+    public void execute(String[] args) throws BookingException {
         System.out.println("Adding occupant...");
 
         if(args.length != 4){
@@ -24,12 +25,13 @@ public class AddOccupantCommand implements Command {
             if (roomId < 1 || numberOfOccupants < 0) {
                 System.out.println("Invalid Command");
                 printSyntax();
-                throw new NumberFormatException("Room ID must be a positive integer and number of occupants must be a non-negative integer.");
+                throw new OccupyingException("Room ID must be a positive integer and number of occupants must be a non-negative integer.");
             }
-            office.getRoomManager().addOccupant(roomId, numberOfOccupants);
+                office.getRoomManager().addOccupant(roomId, numberOfOccupants);
+           
         } catch (NumberFormatException e) {
             System.out.println("Invalid room ID.");
-        } catch (BookingException e) {
+        } catch (OccupyingException e) {
             System.out.println("Error adding occupant: " + e.getMessage());
         }
     }
