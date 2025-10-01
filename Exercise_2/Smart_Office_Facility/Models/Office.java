@@ -9,9 +9,6 @@ public class Office {
     private boolean isConfigured = false;
     private RoomManager roomManager;
 
-    private Office() {
-        roomManager = new RoomManager();
-    }
 
     public static Office getInstance() {
         if (instance == null) {
@@ -22,10 +19,12 @@ public class Office {
 
 
     public void configureOffice(int roomCount) {
+        roomManager = new RoomManager();
         this.roomCount = roomCount;
         for (int i = 1; i <= roomCount; i++) {
             roomManager.addRoom(i);
-        }
+        }   
+        
         isConfigured=true;
     }
 

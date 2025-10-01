@@ -3,15 +3,15 @@ package Models;
 import java.util.*;
 import Exceptions.BookingException;
 import Services.DeviceManager;
+import Utils.TimeUtils;
 
 public class Room { 
     int roomId;
     int capacity;
     private final DeviceManager deviceManager;
     private int currentOccupancy = 0;
-    enum RoomState { UNCONFIGURED, CONFIGURED }
-    RoomState state;
-    List<Booking> bookings = new ArrayList<>();
+    private RoomState state = RoomState.UNCONFIGURED;
+    private SortedSet<Booking> bookings = new TreeSet<>();
 
 
     public Room(int roomId) {
@@ -34,7 +34,9 @@ public class Room {
         if (state == RoomState.UNCONFIGURED) {
             throw new BookingException("Room " + roomId + " is not configured yet!");
         }
-        
+        if (TimeUtils.compareTimes(startTime, TimeUtils.getCurrentTimeHHMM()) < 0) {
+            throw new BookingException("Cannot book room " + roomId + " in the past!");
+        }
         
         Booking newBooking = new Booking(startTime, duration);
         for (Booking b : bookings) {
@@ -44,9 +46,24 @@ public class Room {
         }
 
         bookings.add(newBooking);
-        this.state = RoomState.CONFIGURED; // stays configured even after booking
+        //remains configured state till the booking's startTime and wants to start the 5min countdown at startTime - 5min
+    
         System.out.println("Room " + roomId + " booked successfully.");
     }
+
+
+    public void releaseBooking(Booking booking) {
+        if (state == RoomState.BOOKED) {
+            state = RoomState.CONFIGURED;
+            if (currentOccupancy > 0) {
+                currentOccupancy = 0;
+                deviceManager.updateDevices(currentOccupancy);
+            }
+        }
+        bookings.remove(bookings.remove(booking));
+        System.out.println("Room " + roomId + " is now released.");
+    }
+
 
     public void addOccupants(int numberOfOccupants) {
         if (state == RoomState.UNCONFIGURED) {
@@ -71,6 +88,37 @@ public class Room {
     private int getCurrentOccupancy(){
         return currentOccupancy;
     }
+
+    public void setBooked(boolean booked) {
+        if (booked) {
+            if (state == RoomState.CONFIGURED) {
+                state = RoomState.BOOKED;
+            }
+        } else {
+            if (state == RoomState.BOOKED) {
+                state = RoomState.CONFIGURED;
+            }
+        }
+    }
+
+    public SortedSet<Booking> getBookings() { return bookings; }
+
+    public boolean isOccupied() {
+        return currentOccupancy > 0;
+    }
+
+    public boolean isBooked() {
+        return state == RoomState.BOOKED;
+    }
+
+    public int getRoomNumber() {
+        return roomId;
+    }
+
+    public boolean isConfigured() {
+        return state == RoomState.CONFIGURED;
+    }
+
 
 
     

@@ -4,9 +4,9 @@ import java.time.format.DateTimeFormatter;
 import Utils.TimeUtils;
 
 
-public class Booking {
-    String startTime; // Simplified as String (HH:MM), can use LocalTime
-    int duration;   // Duration in minutes  
+public class Booking implements Comparable<Booking> {
+    private String startTime; // Simplified as String (HH:MM), can use LocalTime
+    private int duration;   // Duration in minutes
 
     public Booking(String startTime, int duration) {
         this.startTime = startTime;
@@ -31,5 +31,20 @@ public class Booking {
 
         return !(endsBefore || startsAfter); //If neither is true → they overlap.
     }
+
+    public String getStartTime() {
+        return startTime;
+    }
+    public String getEndTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime thisStart = LocalTime.parse(this.startTime, formatter);
+        LocalTime thisEnd = thisStart.plusMinutes(duration);
+        return thisEnd.format(formatter);
+    }
+
+    @Override
+    public int compareTo(Booking other) {
+        return TimeUtils.compareTimes(this.startTime, other.startTime);
+    }   
 
 }
