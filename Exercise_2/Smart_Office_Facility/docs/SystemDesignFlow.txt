@@ -16,7 +16,7 @@
     System validates 
     if available:
          → creates a booking entry
-         → updates room status.
+         → updates room status. 
     If already booked:
         → error message shown.
 

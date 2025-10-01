@@ -26,6 +26,9 @@ public class Room {
     }
 
     public void configure(int capacity) throws ConfigException {
+        if (this.isConfigured()) {
+            throw new ConfigException("Room " + roomId + " is already configured!");
+        }   
         if (capacity <= 0) {
             throw new ConfigException("Capacity must be a positive integer.");
         }
